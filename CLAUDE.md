@@ -6,8 +6,9 @@ Robot learning experiments on Steel (Skild's GPU rigid-body solver inside Newton
 
 - RL environments on Steel with thousands of parallel worlds (`train.py` is the cartpole PPO baseline).
 - Agentic sim workflows: agents build and tune scenes, train or script experts, grade them, and fan out data generation as parallel Modal jobs.
-- Inkling Mini: a small VLA adapted from SmolVLM. Data is rendered in sim with `newton.sensors.SensorTiledCamera` and labeled from task definitions. Checkpoints are evaluated closed-loop in the same Steel scenes.
-- Planned order: a cartpole-level vision task end to end (render, dataset, train, eval), then SmolVLM with discrete action tokens on a few `steel/examples/shelf` tasks, then a flow-matching action expert and agent-driven task fan-out.
+- Turn Thinking Machines' Inkling 2 Mini (open-weight looped MoE VLM, 26.4B total / 3.4B active, https://thinkingmachines.ai/news/inkling-2-mini/) into a robot-use agent, following PEAR (https://arxiv.org/abs/2611.18562): each round the model sees camera images and end-effector state as JSON, reasons, and outputs an end-effector pose delta as JSON; IK and a controller execute it. Trained with RL only (GRPO, binary success reward), no demonstrations, on a curriculum of tasks.
+- Steel is the task factory: agents build scenes in Steel, each with an instruction and a success check, rendered with `newton.sensors.SensorTiledCamera`.
+- Planned order: the robot-use protocol on one Franka tabletop scene in Steel, base-model success rates across a handful of tasks, then RL, then agent-generated tasks.
 
 ## Running
 
