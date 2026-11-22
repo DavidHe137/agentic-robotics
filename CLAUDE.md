@@ -12,9 +12,18 @@ Robot learning experiments on Steel (Skild's GPU rigid-body solver inside Newton
 
 ## Running
 
-- The local machine is a Mac with no CUDA. All GPU work runs on Modal: `uv run modal run <script>.py::<function>`.
+- The local machine is a Mac with no CUDA. All GPU work runs on Modal: `uv run modal run <script>.py::<function>`. Run modal as its own command (no `cd ... &&` before it, no pipe after it): only commands that start with `modal` or `uv run modal` are exempt from the sandbox, and others fail with "Could not connect to the Modal server".
 - Newton is pinned to a commit of the `skild-ai/newton` fork in two places: `pyproject.toml` and the image definition in each Modal script. Keep them identical.
-- Use uv for everything Python.
+- Use uv for everything Python. Run `uv` from the repo root, never from inside `steel/` or `pear/` (it would create a venv for their projects).
+- Credentials live only in Modal secrets; never put keys in code, files, or chat. Attach them with `secrets=[modal.Secret.from_name(...)]`:
+  - `anthropic`: `ANTHROPIC_API_KEY` (verified working). For Claude as a frontier baseline or teacher.
+  - `tinker`: `TINKER_API_KEY` (verified working, SDK `tinker` 0.39.2). For Inkling 2 Mini sampling and training on Tinker. Model names: `thinkingmachines/Inkling-2-Mini` (64K context) and `thinkingmachines/Inkling-2-Mini:peft:262144` (256K). List models with `tinker.RestClient().get_server_capabilities().result().supported_models`.
+  - `cloudflare_r2`: pre-existing, unrelated to this project's plan so far.
+- The first experiment is the LIBERO baseline in `baseline.md`: Inkling 2 Mini zero-shot under PEAR's unchanged harness, after a Claude control run.
+
+## pear/
+
+`pear/` is an untracked, read-only clone of https://github.com/mit-han-lab/pear (the PEAR paper's code). Reuse its protocol and LIBERO env directly: `pear/envs/system_prompt.md`, `pear/envs/libero/` (env, motion controller, environment prompt), `pear/agent_loop/protocol.py` and `tool_parser.py`. Its Ray/verl trainer and Qwen kernels are not needed.
 
 ## steel/
 
