@@ -18,7 +18,8 @@ Robot learning experiments on Steel (Skild's GPU rigid-body solver inside Newton
 
 ## steel/
 
-`steel/` is an untracked, read-only copy of the upstream Steel repo. Do not edit it. Start from `steel/agents/README.md` for the workflows and `steel/examples/AGENTS.md` for examples and solver presets. Its render-and-grade tooling assumes local GPUs with EGL and ffmpeg, so running it on Modal needs a custom image.
+`steel/` is an untracked, read-only copy of the upstream Steel repo. Do not edit it. Start from `steel/agents/README.md` for the workflows and `steel/examples/AGENTS.md` for examples and solver presets. Its render-and-grade tooling assumes local GPUs with EGL and ffmpeg, so running it on Modal needs a custom image (`render.py` runs render-and-grade on Modal and serves the gallery).
+- Steel also has a WebGPU implementation that runs in the browser (https://github.com/skild-ai/steel-webgpu, demos at https://www.skild.ai/steel/playground). Where a scene already exists there (the shelf's ported scenes, e.g. the hero-montage tabletop demos like `toaster` and `jenga`, see `steel/examples/README.md` "Ported scenes"), it is worth trying in the browser as a lighter alternative to rendering on Modal. Use Chrome, not Safari.
 
 ## Code style
 
