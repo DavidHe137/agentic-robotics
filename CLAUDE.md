@@ -13,6 +13,7 @@ Robot learning experiments on Steel (Skild's GPU rigid-body solver inside Newton
 ## Running
 
 - The local machine is a Mac with no CUDA. All GPU work runs on Modal: `uv run modal run <script>.py::<function>`. Run modal as its own command (no `cd ... &&` before it, no pipe after it): only commands that start with `modal` or `uv run modal` are exempt from the sandbox, and others fail with "Could not connect to the Modal server".
+- In cloud sessions (`CLAUDE_CODE_REMOTE=true`), the SessionStart hook runs `.claude/cloud_setup.sh`, which checks out the `pear/` and `steel/` submodules and runs `uv sync`. Modal authenticates through `MODAL_TOKEN_ID` and `MODAL_TOKEN_SECRET` set in the cloud environment.
 - Newton is pinned to a commit of the `skild-ai/newton` fork in two places: `pyproject.toml` and the image definition in each Modal script. Keep them identical.
 - Use uv for everything Python. Run `uv` from the repo root, never from inside `steel/` or `pear/` (it would create a venv for their projects).
 - Credentials live only in Modal secrets; never put keys in code, files, or chat. Attach them with `secrets=[modal.Secret.from_name(...)]`:
@@ -21,13 +22,17 @@ Robot learning experiments on Steel (Skild's GPU rigid-body solver inside Newton
   - `cloudflare_r2`: pre-existing, unrelated to this project's plan so far.
 - The first experiment is the LIBERO baseline in `baseline.md`: Inkling 2 Mini zero-shot under PEAR's unchanged harness, after a Claude control run.
 
+## Submodules
+
+`pear/` and `steel/` are editable forks. To change one, commit and push inside the submodule first, then commit the updated submodule pointer in this repo. Keep changes small so upstream merges stay easy; pull upstream with `git -C <dir> fetch upstream`.
+
 ## pear/
 
-`pear/` is an untracked, read-only clone of https://github.com/mit-han-lab/pear (the PEAR paper's code). Reuse its protocol and LIBERO env directly: `pear/envs/system_prompt.md`, `pear/envs/libero/` (env, motion controller, environment prompt), `pear/agent_loop/protocol.py` and `tool_parser.py`. Its Ray/verl trainer and Qwen kernels are not needed.
+`pear/` is a submodule pointing at our fork https://github.com/DavidHe137/pear of https://github.com/mit-han-lab/pear (the PEAR paper's code). Reuse its protocol and LIBERO env directly: `pear/envs/system_prompt.md`, `pear/envs/libero/` (env, motion controller, environment prompt), `pear/agent_loop/protocol.py` and `tool_parser.py`. Its Ray/verl trainer and Qwen kernels are not needed.
 
 ## steel/
 
-`steel/` is an untracked, read-only copy of the upstream Steel repo. Do not edit it. Start from `steel/agents/README.md` for the workflows and `steel/examples/AGENTS.md` for examples and solver presets. Its render-and-grade tooling assumes local GPUs with EGL and ffmpeg, so running it on Modal needs a custom image (`render.py` runs render-and-grade on Modal and serves the gallery).
+`steel/` is a submodule pointing at our fork https://github.com/DavidHe137/steel of https://github.com/skild-ai/steel. Start from `steel/agents/README.md` for the workflows and `steel/examples/AGENTS.md` for examples and solver presets. Its render-and-grade tooling assumes local GPUs with EGL and ffmpeg, so running it on Modal needs a custom image (`render.py` runs render-and-grade on Modal and serves the gallery).
 - Steel also has a WebGPU implementation that runs in the browser (https://github.com/skild-ai/steel-webgpu, demos at https://www.skild.ai/steel/playground). Where a scene already exists there (the shelf's ported scenes, e.g. the hero-montage tabletop demos like `toaster` and `jenga`, see `steel/examples/README.md` "Ported scenes"), it is worth trying in the browser as a lighter alternative to rendering on Modal. Use Chrome, not Safari.
 
 ## Code style

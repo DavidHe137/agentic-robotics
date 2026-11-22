@@ -1,0 +1,8 @@
+[submodule "pear"]
+	path = pear
+	url = https://github.com/DavidHe137/pear.git
+	shallow = true
+[submodule "steel"]
+	path = steel
+	url = https://github.com/DavidHe137/steel.git
+	shallow = true
