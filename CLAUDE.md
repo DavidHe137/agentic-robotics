@@ -13,7 +13,7 @@ Robot learning experiments on Steel (Skild's GPU rigid-body solver inside Newton
 ## Running
 
 - The local machine is a Mac with no CUDA. All GPU work runs on Modal: `uv run modal run <script>.py::<function>`. Run modal as its own command (no `cd ... &&` before it, no pipe after it): only commands that start with `modal` or `uv run modal` are exempt from the sandbox, and others fail with "Could not connect to the Modal server".
-- In cloud sessions (`CLAUDE_CODE_REMOTE=true`), the SessionStart hook runs `.claude/cloud_setup.sh`, which checks out the `pear/` and `steel/` submodules and runs `uv sync`. Modal authenticates through `MODAL_TOKEN_ID` and `MODAL_TOKEN_SECRET` set in the cloud environment.
+- In cloud sessions (`CLAUDE_CODE_REMOTE=true`), the cloud environment's setup script checks out the `pear/` and `steel/` submodules (`git submodule update --init --depth 1`) and runs `uv sync`. Modal authenticates through `MODAL_TOKEN_ID` and `MODAL_TOKEN_SECRET` set in the cloud environment.
 - Newton is pinned to a commit of the `skild-ai/newton` fork in two places: `pyproject.toml` and the image definition in each Modal script. Keep them identical.
 - Use uv for everything Python. Run `uv` from the repo root, never from inside `steel/` or `pear/` (it would create a venv for their projects).
 - Credentials live only in Modal secrets; never put keys in code, files, or chat. Attach them with `secrets=[modal.Secret.from_name(...)]`:
