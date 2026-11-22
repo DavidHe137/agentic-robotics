@@ -1,0 +1,12 @@
+[project]
+name = "inkling"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "modal>=1.6.4",
+    "newton[examples]",
+    "torch>=2.15.0",
+]
+
+[tool.uv.sources]
+newton = { git = "https://github.com/skild-ai/newton.git", rev = "f6fc82a8b06d036e1e6d02a61d77a2d300476e8d" }
